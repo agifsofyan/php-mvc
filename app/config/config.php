@@ -2,7 +2,7 @@
     // Database Params
     define('DB_HOST','localhost');
     define('DB_USER','root');
-    define('DB_PASS','25fba6a1');
+    define('DB_PASS','');
     define('DB_NAME','Laruno');
     define('DB_CHARSET','utf8');
 
