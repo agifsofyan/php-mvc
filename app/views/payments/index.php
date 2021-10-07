@@ -100,7 +100,8 @@
         // responsive: true,
         buttons: [
             { 
-                extend: 'csv',
+                extend: 'excel',
+                messageTop: 'Payment Data',
                 exportOptions: {
                     columns: [ 1, 2, 3, 4, 5 ]
                 }
@@ -135,7 +136,7 @@
     );
     
     $(".dt-export").on("click", function() {
-        oTable.button( '.buttons-csv' ).trigger();
+        oTable.button( '.buttons-excel' ).trigger();
     });
 
     $('.pickdate').each(function() {

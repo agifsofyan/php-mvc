@@ -192,7 +192,8 @@
         // responsive: true,
         buttons: [
             { 
-                extend: 'csv',
+                extend: 'excel',
+                messageTop: 'Report Data',
                 exportOptions: {
                     columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                 }
@@ -227,7 +228,7 @@
     );
     
     $(".dt-export").on("click", function() {
-        dTabel.button( '.buttons-csv' ).trigger();
+        dTabel.button( '.buttons-excel' ).trigger();
     });
 
     $('.pickdate').each(function() {
