@@ -442,29 +442,6 @@ Salam Dahsyat!`;
         }
     });
 
-    function renderCheckFilter() {
-        var filtCheck = [];
-        $('.check-filter:checked').each(function(i) {
-            filtCheck[i] = $(this).val();
-        });
-        
-        oTable.search(filtCheck.join('|'), true, false).draw();
-    }
-
-    function toCheck(e) {
-            
-        let xCheck = $(e).find('input.check-filter')
-        console.log('xCheck', xCheck);
-        
-        if(xCheck.is(": checked")){
-            xCheck.prop("checked", false);
-        }else{
-            xCheck.prop("checked", true);
-        }
-        
-        renderCheckFilter();
-    }
-
     function confirmDialog(message, form) {
         $('<div></div>').appendTo('body')
         .html('<div><h6>' + message + '?</h6></div>')
@@ -520,7 +497,6 @@ Salam Dahsyat!`;
     });
 
     function toCheck(e) {
-        console.log(e);
         let xCheck = $(e).find('input.check-filter')
         
         if(xCheck.is(":checked")){

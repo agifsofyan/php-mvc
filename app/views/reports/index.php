@@ -7,7 +7,35 @@
         <h3 style="border: silver dotted;" class="text-center p-2">Report</h3>
     </div>
     
-    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-5"></div>
+    <!-- <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-5"></div> -->
+
+    <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
+        <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
+            <div class="menu-button-container">
+                <button class="mdc-button mdc-menu-button bg-white">
+                    <i class="material-icons">filter_list</i>
+                    Filter product
+                </button>
+                <div class="mdc-menu mdc-menu-surface p-2" tabindex="-1">
+                    
+                    <div class="mdc-layout-grid__inner">
+                    <?php foreach($opt['products'] as $val) : ?>
+                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4 bg-light p-2 pointer" onClick="toCheck(this);">
+                            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-1">
+                                <input type="checkbox" class="check-filter" value="<?php echo $val->name; ?>" />
+                            </div>
+                            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-11">
+                                <small><?php echo strlen($val->name) > 20 ? ucwords(substr($val->name, 0, 20)) . '...' : ucwords($val->name); ?></small>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
     
     <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4">
         <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
@@ -335,6 +363,27 @@
             confirmDialog('Are you sure delete ?', form);
         }
     });
+
+    function toCheck(e) {
+        let xCheck = $(e).find('input.check-filter')
+        
+        if(xCheck.is(":checked")){
+            xCheck.prop("checked", false);
+        }else{
+            xCheck.prop("checked", true);
+        }
+        
+        renderCheckFilter();
+    }
+    
+    function renderCheckFilter() {
+        var filtCheck = [];
+        $('.check-filter:checked').each(function(i) {
+            filtCheck[i] = $(this).val();
+        });
+        
+        dTabel.search(filtCheck.join('|'), true, false).draw();
+    }
 </script>
 
 <?php require APP_ROOT . '/views/inc/_bottom.php' ?>

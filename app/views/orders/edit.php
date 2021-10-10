@@ -6,30 +6,32 @@
    <div class="mdc-layout-grid__inner p-4 bg-white">
     
        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-         <div class="mdc-text-field">
+         <div class="mdc-text-field <?php echo $data->hp_err ? 'mdc-text-field--invalid' : ''; ?>">
            <input
             name="hp" 
-            type="text"
-            class="mdc-text-field__input" 
+            type="number"
+            class="mdc-text-field__input"
             value="<?php echo $data->customer_hp; ?>"
-            readonly
+            onchange="hanldeChange(this, 'angka')"
           />
            <div class="mdc-line-ripple"></div>
            <label for="text-field-hero-input" class="mdc-floating-label">Customer Whatsapp</label>
+           <small class="text-danger pt-1"><?php echo $data->hp_err ? $data->hp_err : ''; ?></small>
          </div>
       </div>
 
        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
-         <div class="mdc-text-field">
+         <div class="mdc-text-field <?php echo $data->name_err ? 'mdc-text-field--invalid' : ''; ?>">
            <input
             name="name" 
             type="text" 
             class="mdc-text-field__input"
             value="<?php echo $data->customer_name; ?>"
-            readonly
+            onchange="hanldeChange(this, 'huruf')"
           />
            <div class="mdc-line-ripple"></div>
            <label for="text-field-hero-input" class="mdc-floating-label">Customer Name</label>
+           <small class="text-danger pt-1"><?php echo $data->name_err ? $data->name_err : ''; ?></small>
          </div>
       </div>
       
@@ -144,5 +146,52 @@
 </form>
 
 <small class="text-primary mt-4">* Only update status</small>
+
+<script type="text/javascript">
+  if($('input[name="hp"]').val().length == 0 || $('input[name="name"]').val().length == 0){
+    $("button:submit").prop('disabled', true);
+  }
+
+  function hanldeChange(e, typeStr){
+      let parent = $(e).closest('div');
+      let msgError = parent.find('small.text-danger');
+
+      if(e.value.length == 0){
+        msgError.text('Input wajib diisi');
+      }else{
+        let iRegex = StringValidation(e.value, typeStr);
+        if(!iRegex.valid){
+          msgError.text(iRegex.msg);
+        }else{
+          msgError.text('');
+        }
+      }
+
+      let msgErr = $('small.text-danger').text();
+      if(msgErr.length != 0){
+        $("button:submit").prop('disabled', true);
+      }else{
+        $("button:submit").prop('disabled', false);
+      }
+  }
+
+  const StringValidation = (str, typeStr) => {
+    let strRegex;
+    let msg;
+
+    if(typeStr == 'huruf'){
+      strRegex = /^[a-zA-Z]+$/i
+      msg = 'Input hanya berisi huruf'
+    }else{
+      strRegex = /^[0-9]{10,13}$/
+      msg = 'Input hanya berisi angka, min 10 digit, max 13 digit'
+    }
+
+	  return {
+      valid: strRegex.test(str),
+      msg: msg
+    }
+  }
+</script>
 
 <?php require APP_ROOT . '/views/inc/_bottom.php' ?>

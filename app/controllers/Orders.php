@@ -22,8 +22,8 @@ class Orders extends Controller
     $payments = $this->paymentModel->list('title', 'asc');
 
     $opt = [
-	'products' => $products,
-	'payments' => $payments	
+    'products' => $products,
+    'payments' => $payments	
     ];
     
     $this->view('orders/index', $data, $opt);
@@ -273,6 +273,8 @@ class Orders extends Controller
     $payment = $this->paymentModel->list('title', 'asc');
     
     $opt = ['product' => $product, 'payment' => $payment, 'error' => ''];
+    $data->hp_err = '';
+    $data->name_err = '';
 
     
     if($_SERVER['REQUEST_METHOD']=='POST'){
@@ -282,19 +284,46 @@ class Orders extends Controller
       $form['status'] = isset($_POST['status']) ? 'paid' : 'unpaid';
       $form['status_by'] = $_SESSION['user_id'];
 
+      $form['hp'] = $_POST['hp'];
+      $form['name'] = $_POST['name'];
+
+      if ( empty($form['hp']) ) {
+        $data->hp_err = 'Please insert the Customer HP';
+      }
+
+      if ( empty($form['name']) ) {
+        $data->name_err = 'Please insert the Customer Name';
+      }else{
+        if(!preg_match("/^[a-zA-Z]+$/i", $form['name'])){
+          $data->name_err = 'Customer Name can only contain letters'; 
+        }
+      }
+
       // Validate product id
       if ( empty($form['payment_id']) ) {
         $opt['error'] = 'Please select the payment';
       }
 
-      if ( empty($opt['error']) ) {
-        $response = $this->orderModel->updateStatus($id, $form);
-        if( isset($response->errorInfo) ){
-          flash('msg_error', $response->errorInfo[2], 'snackbar-error');
-        } else{
-          flash('msg_success', 'Order Updated');
-          redirect('orders');
-        }      
+      if ( empty($opt['error']) && empty($data->hp_err) && empty($data->name_err)) {
+
+        try {
+          $this->customerModel->update([
+            'id' => (int) $data->customer_id,
+            'hp' => $form['hp'],
+            'name' => $form['name'],
+            'email' => $data->customer_email
+          ]);
+
+          $response = $this->orderModel->updateStatus($id, $form);
+          if( isset($response->errorInfo) ){
+            flash('msg_error', $response->errorInfo[2], 'snackbar-error');
+          } else{
+            flash('msg_success', 'Order Updated');
+            redirect('orders');
+          }
+        } catch (\Throwable $th) {
+          flash('msg_error', $th, 'snackbar-error');
+        }     
       }else{
         flash('msg_error', $opt['error'] , 'snackbar-error');
       }

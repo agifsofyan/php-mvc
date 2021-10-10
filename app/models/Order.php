@@ -162,6 +162,7 @@
                     'SELECT
                     a.*,
                     b.name AS customer_name,
+                    b.email AS customer_email,
                     b.hp AS customer_hp,
                     c.name AS product_name,
                     c.price AS product_price,

@@ -28,12 +28,14 @@ class Reports extends Controller
     $summary =  $this->orderModel->sumMonth((int) $year);
     $customerCount = $this->orderModel->getCount('customer_id');
     $productCount = $this->orderModel->getCount('product_id');
+    $products = $this->productModel->toMenu();
     
     $opt = [
-            'month' => $month,
-            'prices' => $summary,
-            'count_customer' => $customerCount,
-            'cout_product' => $productCount
+      'month' => $month,
+      'prices' => $summary,
+      'count_customer' => $customerCount,
+      'cout_product' => $productCount,
+      'products' => $products,
     ];
   
     $this->view('reports/index', $data, $opt);

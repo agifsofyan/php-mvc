@@ -10,7 +10,7 @@ class Auth extends Controller
 
     public function register()
     {
-        if( !isLoggedIn() ) {
+        if( isLoggedIn() ) {
             redirect('/');
         }
 
@@ -45,11 +45,6 @@ class Auth extends Controller
                     $data['username_err'] = 'Username is already in use. Choose another one!';
                 }
             }
-
-            // Validate userName
-             if ( empty($data['username']) ) {
-                $data['username_err'] = 'Please inform your username';
-             }
 
              // Validate Password
              if ( empty($data['password']) ) {
@@ -121,16 +116,20 @@ class Auth extends Controller
             }
 
             if(!empty($data['username'])){
-                $user = $this->service->getUserByUserName($data['username']);
-                if(!$user){
-                    $data['username_err'] = 'No user found!';
+                if(preg_match("/^[a-zA-Z0-9]+$/i", $data['username'])){
+                    $user = $this->service->getUserByUserName($data['username']);
+                    if(!$user){
+                        $data['username_err'] = 'No user found!';
+                    }
+                }else{
+                    $data['username_err'] = 'Usernames can only contain letters and number without space'; 
                 }
             }
 
             if ( !empty($data['password']) && $user != false ) {
                 $userAuthenticated = $this->service->login($data['username'], $data['password']);
                 if(!$userAuthenticated){
-                    $data['password_err'] = 'Password are incorrect';
+                    $data['password_err'] = 'Username & password incorrect';
                 }
             }
 
